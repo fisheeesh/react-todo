@@ -11,7 +11,7 @@ export default function TodoForm({ addTodo }) {
         if (title.trim() === '') return
 
         let newTodo = {
-            id: Math.floor(Math.random() * 10000),
+            id: Math.floor(Math.random() * 10000).toString(),
             title: title.trim(),
             completed: false
         }

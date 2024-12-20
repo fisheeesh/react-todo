@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-export default function Todo({ todo }) {
+export default function Todo({ todo, deleteTodo }) {
     return (
         <li className="todo-item-container">
             <div className="todo-item">
@@ -9,7 +9,7 @@ export default function Todo({ todo }) {
                 </span>
                 {/* <input type="text" className="todo-item-input" value="Go to Grocery" /> */}
             </div>
-            <button className="x-button">
+            <button className="x-button" onClick={() => deleteTodo(todo.id)}>
                 <svg
                     className="x-button-icon"
                     fill="none"

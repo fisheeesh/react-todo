@@ -31,12 +31,23 @@ function App() {
     })
   }
 
+  //@TODO delete todo
+  const deleteTodo = (todoID) => {
+    // ? cliendt side update
+    setTodos(prevTodo => prevTodo.filter(todo => todo.id !== todoID))
+
+    // $ server side update
+    fetch(`http://localhost:3001/todos/${todoID}`, {
+      method: 'DELETE'
+    })
+  }
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
         <h2>Todo App</h2>
         <TodoForm addTodo={addTodo} />
-        <TodoList todos={todos} />
+        <TodoList todos={todos} deleteTodo={deleteTodo} />
         <CheckAllAndRemaining />
         <div className="other-buttons-container">
           <TodoFilter />
