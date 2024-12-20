@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 function App() {
 
   const [todos, setTodos] = useState([])
+  const remainingTodos = todos.filter(todo => todo.completed).length
 
   useEffect(() => {
     fetch('http://localhost:3001/todos')
@@ -59,13 +60,32 @@ function App() {
     })
   }
 
+  // @TODO check all todos
+  const checkAllTodos = () => {
+    // ? client side update
+    /**
+     * ? I use map() cuz I want a new array based on the previous array
+     * ? I want to have an array of completed todos
+     */
+    setTodos(prevTodo => prevTodo.map(todo => ({ ...todo, completed: true })))
+
+    // $ server side update
+    todos.forEach(todo => {
+      if (!todo.completed) {
+        updateTodo({
+          ...todo, completed: true
+        })
+      }
+    })
+  }
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
         <h2>Todo App</h2>
         <TodoForm addTodo={addTodo} />
         <TodoList todos={todos} deleteTodo={deleteTodo} updateTodo={updateTodo} />
-        <CheckAllAndRemaining />
+        <CheckAllAndRemaining remainingTodos={remainingTodos} checkAllTodos={checkAllTodos} />
         <div className="other-buttons-container">
           <TodoFilter />
           <ClearCompletedBtn />
