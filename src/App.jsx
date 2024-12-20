@@ -18,11 +18,24 @@ function App() {
       .catch(err => console.log(err.message))
   }, [])
 
+  // @TODO add todo
+  const addTodo = (newTodo) => {
+    // ? client side update
+    setTodos(prevTodo => [...prevTodo, newTodo])
+
+    // $ server side update
+    fetch('http://localhost:3001/todos', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newTodo)
+    })
+  }
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
         <h2>Todo App</h2>
-        <TodoForm />
+        <TodoForm addTodo={addTodo} />
         <TodoList todos={todos} />
         <CheckAllAndRemaining />
         <div className="other-buttons-container">
