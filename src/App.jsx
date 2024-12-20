@@ -46,6 +46,9 @@ function App() {
   //@TODO update todo
   const updateTodo = (updatedTodo) => {
     // ? client side update
+    /**
+    * ? I use map() cuz I want a new array based on the previous array
+    */
     setTodos(prevTodo => prevTodo.map(todo => {
       if (todo.id === updatedTodo.id) return updatedTodo
 
@@ -63,11 +66,7 @@ function App() {
   // @TODO check all todos
   const checkAllTodos = () => {
     // ? client side update
-    /**
-     * ? I use map() cuz I want a new array based on the previous array
-     * ? I want to have an array of completed todos
-     */
-    setTodos(prevTodo => prevTodo.map(todo => ({ ...todo, completed: true })))
+    // setTodos(prevTodo => prevTodo.map(todo => ({ ...todo, completed: true })))
 
     // $ server side update
     todos.forEach(todo => {
@@ -76,6 +75,15 @@ function App() {
           ...todo, completed: true
         })
       }
+    })
+  }
+
+  // @TODO clear all the completed todos
+  const clearCompleted = () => {
+    const completedTodos = todos.filter(todo => todo.completed)
+
+    completedTodos.forEach(todo => {
+      deleteTodo(todo.id)
     })
   }
 
@@ -88,7 +96,7 @@ function App() {
         <CheckAllAndRemaining remainingTodos={remainingTodos} checkAllTodos={checkAllTodos} />
         <div className="other-buttons-container">
           <TodoFilter />
-          <ClearCompletedBtn />
+          <ClearCompletedBtn clearCompleted={clearCompleted} />
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
-export default function ClearCompletedBtn() {
+/* eslint-disable react/prop-types */
+export default function ClearCompletedBtn({clearCompleted}) {
     return (
         <div>
-            <button className="button">Clear completed</button>
+            <button className="button" onClick={clearCompleted}>Clear completed</button>
         </div>
     )
 }
