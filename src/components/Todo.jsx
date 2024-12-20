@@ -1,13 +1,41 @@
+import { useState } from "react"
+
 /* eslint-disable react/prop-types */
-export default function Todo({ todo, deleteTodo }) {
+export default function Todo({ todo, deleteTodo, updateTodo }) {
+    const [isEdit, setIsEdit] = useState(false)
+    const [title, setTitle] = useState(todo.title)
+
+    const handleUpdate = (e) => {
+        e.preventDefault()
+
+        if (title.trim() === '') return
+
+        let updatedTodo = {
+            id: todo.id,
+            title: title.trim(),
+            completed: todo.completed
+        }
+
+        updateTodo(updatedTodo)
+        setIsEdit(false)
+    }
+
     return (
         <li className="todo-item-container">
             <div className="todo-item">
                 <input type="checkbox" />
-                <span className={`todo-item-label ${todo.completed ? 'line-through' : ''}`}>
-                    {todo.title}
-                </span>
-                {/* <input type="text" className="todo-item-input" value="Go to Grocery" /> */}
+                {!isEdit ?
+                    (<span onDoubleClick={() => setIsEdit(true)} className={`todo-item-label ${todo.completed ? 'line-through' : ''}`}>
+                        {todo.title}
+                    </span>)
+                    :
+                    (
+                        <form onSubmit={handleUpdate}>
+                            <input onChange={e => setTitle(e.target.value)} type="text" className="todo-item-input" value={title} />
+                        </form>
+                    )
+                }
+
             </div>
             <button className="x-button" onClick={() => deleteTodo(todo.id)}>
                 <svg

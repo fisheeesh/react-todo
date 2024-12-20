@@ -42,12 +42,29 @@ function App() {
     })
   }
 
+  //@TODO update todo
+  const updateTodo = (updatedTodo) => {
+    // ? client side update
+    setTodos(prevTodo => prevTodo.map(todo => {
+      if (todo.id === updatedTodo.id) return updatedTodo
+
+      return todo
+    }))
+
+    // $ server side update
+    fetch(`http://localhost:3001/todos/${updatedTodo.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTodo)
+    })
+  }
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
         <h2>Todo App</h2>
         <TodoForm addTodo={addTodo} />
-        <TodoList todos={todos} deleteTodo={deleteTodo} />
+        <TodoList todos={todos} deleteTodo={deleteTodo} updateTodo={updateTodo} />
         <CheckAllAndRemaining />
         <div className="other-buttons-container">
           <TodoFilter />
