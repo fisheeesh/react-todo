@@ -5,17 +5,21 @@ import TodoList from './components/TodoList';
 import CheckAllAndRemaining from './components/CheckAllAndRemaining';
 import TodoFilter from './components/TodoFilter';
 import ClearCompletedBtn from './components/ClearCompletedBtn';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 function App() {
-
   const [todos, setTodos] = useState([])
-  const remainingTodos = todos.filter(todo => todo.completed).length
+  const [filteredTodos, setFilteredTodos] = useState(todos)
+
+  const remainingTodos = todos.filter(todo => !todo.completed).length
 
   useEffect(() => {
     fetch('http://localhost:3001/todos')
       .then(res => res.json())
-      .then(data => setTodos(data))
+      .then(data => {
+        setTodos(data)
+        setFilteredTodos(data)
+      })
       .catch(err => console.log(err.message))
   }, [])
 
@@ -77,7 +81,6 @@ function App() {
       }
     })
   }
-
   // @TODO clear all the completed todos
   const clearCompleted = () => {
     const completedTodos = todos.filter(todo => todo.completed)
@@ -87,15 +90,29 @@ function App() {
     })
   }
 
+  //@TODO filter todos
+  const filteredBy = useCallback((filter) => {
+    if (filter === 'all') {
+      setFilteredTodos(todos)
+    }
+    if (filter === 'active') {
+      setFilteredTodos(todos.filter(todo => !todo.completed))
+    }
+
+    if (filter === 'completed') {
+      setFilteredTodos(todos.filter(todo => todo.completed))
+    }
+  }, [todos])
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
         <h2>Todo App</h2>
         <TodoForm addTodo={addTodo} />
-        <TodoList todos={todos} deleteTodo={deleteTodo} updateTodo={updateTodo} />
+        <TodoList todos={filteredTodos} deleteTodo={deleteTodo} updateTodo={updateTodo} />
         <CheckAllAndRemaining remainingTodos={remainingTodos} checkAllTodos={checkAllTodos} />
         <div className="other-buttons-container">
-          <TodoFilter />
+          <TodoFilter filteredBy={filteredBy} />
           <ClearCompletedBtn clearCompleted={clearCompleted} />
         </div>
       </div>
